@@ -1,0 +1,19 @@
+#VRML_SIM R2021b utf8
+#tags: hidden
+PROTO NeckBracketL [
+]
+{
+    Group{
+        children[
+            Shape{
+                appearance PBRAppearance {
+                    baseColor 0.1 0.1 0.1
+                    roughness 0.3
+                }
+                geometry Mesh {
+                    url "boldbot_description/meshes/support_L.stl"
+                }
+            }
+        ]
+    }
+}

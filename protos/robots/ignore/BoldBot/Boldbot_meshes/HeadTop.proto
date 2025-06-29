@@ -1,0 +1,19 @@
+#VRML_SIM R2021b utf8
+#tags: hidden
+PROTO HeadTop[
+]
+{
+    Group{
+        children[
+            Shape{
+                appearance PBRAppearance {
+                    baseColor 0.03 0.03 0.03
+                    roughness 0.8
+                }
+                geometry Mesh {
+                    url "boldbot_description/meshes/head_top.stl"
+                }
+            }
+        ]
+    }
+}

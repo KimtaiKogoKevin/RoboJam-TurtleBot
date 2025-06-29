@@ -1,0 +1,1753 @@
+#VRML_SIM R2021b utf8
+PROTO BoldbotMain [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 0 1 0
+  field  SFString    name            "Boldbot"  # Is `Robot.name`.
+  field  SFString    controller      "void"     # Is `Robot.controller`.
+  field  MFString    controllerArgs  []         # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""         # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE      # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE       # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   TRUE       # Is `Robot.selfCollision`.
+# MOTOR PARAMETER: See section 2. of docs/Robot_Model_RoboCup_2021 for more information
+  field  SFFloat     MX28-torque          3.10
+  field  SFFloat     MX28-vel             7.02
+  field  SFFloat     MX28-damping         0.31
+  field  SFFloat     MX28-friction        1.03
+  field  SFFloat     MX64-torque          7.30
+  field  SFFloat     MX64-vel             8.17
+  field  SFFloat     MX64-damping         0.65
+  field  SFFloat     MX64-friction        1.73
+  #field  SFFloat     MX106-torque         10.00
+  #field  SFFloat     MX106-vel            5.76
+  #field  SFFloat     MX106-damping        1.23
+  #field  SFFloat     MX106-friction       2.55
+  field  SFFloat     backlash             0.01
+  field  SFFloat     gearMass             0.001
+  field  SFFloat     DYNAMIXEL-RESOLUTION 0.0015
+  # CAMERA PARAMETERS: See docs for more information
+  field SFFloat      fieldOfView            1.36136          # Approximates 78 degrees of freedom
+  field SFInt32      cameraWidth            800              # 800 pixels
+  field SFInt32      cameraHeight           600              # 600 pixels
+  #field SFFloat      cameraLensFocalLength  3.67             # 3.67mm focal length of C920
+  #field  MFColor     recognitionColors [0 0 1]
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    %{
+      if fields.name.value ~= '' then
+        local color = "none"
+        local number = 0
+        -- name is supposed to be something like "red player 2" or "blue player 1"
+        local words = {}
+        for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
+        if #words >= 3 then
+          color = words[1]
+          number = words[3]
+        end
+    }%
+    name IS name
+    children [
+      Accelerometer {
+        translation -0.01 0 0.068
+        rotation 0 0 1.0 -1.5708
+        name "Accelerometer"
+        xAxis TRUE
+        yAxis TRUE
+        zAxis TRUE
+        lookupTable [
+          -39.24 -39.24 0 
+          39.24 39.24 0
+        ]
+      }
+      Gyro {
+        translation 0.01 0 0.068
+        rotation 0 0 1.0 -3.1416
+        name "Gyro"
+        xAxis TRUE
+        yAxis TRUE
+        zAxis TRUE
+        lookupTable [
+          -6.98132 -6.98132 0.00059
+          -3.49066 -3.49066 0.00118
+          -1.74533 -1.74533 0.00236
+          -0.87267 -0.87267 0.00472
+          -0.43633 -0.43633 0.00944
+          -0.21817 -0.21817 0.01888
+          -0.10908 -0.10908 0.03776
+          -0.05454 -0.05454 0.07552
+          0 0 0
+          0.05454 0.05454 0.07552
+          0.10908 0.10908 0.03776
+          0.21817 0.21817 0.01888
+          0.43633 0.43633 0.00944
+          0.87267 0.87267 0.00472
+          1.74533 1.74533 0.00236
+          3.49066 3.49066 0.00118
+          6.98132 6.98132 0.00059
+        ]
+      }
+      Solid {
+        name "body"
+        contactMaterial IS contactMaterial
+        physics Physics {
+          density -1
+          mass 0.310000
+          centerOfMass [ 0.000000 0.000000 0.000000 ]
+          inertiaMatrix [
+            3.592383e-04 3.106458e-04 5.652592e-04
+            0.000000e+00 0.000000e+00 0.000000e+00
+          ]
+        }
+        children [
+          #Torso
+          Group{
+            children[
+              #Left Motor Hip Yaw Mesh
+              Transform{
+                translation 0.01 0.037 -0.0443
+                rotation 1.0 0.0 0.0 3.14
+                scale 0.001 0.001 0.001
+                children[
+                  MX28{}
+                ]
+              }
+              #Right Motor Hip Yaw Mesh
+              Transform{
+                translation 0.01 -0.037 -0.0443
+                rotation 1.0 0.0 0.0 3.14
+                scale 0.001 0.001 0.001
+                children[
+                  MX28{}
+                ]
+              }
+              #Left Motor Shoulder Yaw Mesh
+              Transform{
+                translation 0.0235 0.0602 0.0662
+                rotation -3.3905e-09 0.707106 0.707107 3.14159
+                scale 0.001 0.001 0.001
+                children[
+                  MX28{}
+                ]
+              }
+              #Right Motor Shoulder pitch Mesh
+              Transform{
+                translation 0.0235 -0.0602 0.0662
+                rotation 3.39051e-09 -0.707108 0.707105 3.14159
+                scale 0.001 0.001 0.001
+                children[
+                  MX28{}
+                ]
+              }
+              #Neck Motor yaw Mesh
+              Transform{
+                translation 0.0 0.0 0.09
+                scale 0.001 0.001 0.001
+                children[
+                  MX28{
+
+                  }
+                ]
+              }
+              #Torso Mesh
+              Transform{
+                rotation 0.0 0.0 0.0 0.0
+                scale 0.001 0.001 0.001
+                children[
+                  Shape {
+                    appearance PBRAppearance {
+                      baseColor 0.513725 0.513725 0.513725
+                      roughness 0.2
+                      metalness 1
+                    }
+                    geometry DEF torso Mesh {
+                      url "boldbot_description/meshes/Torso.stl"
+                    }
+                  }
+                ]
+              }
+              #Number plate mesh
+              Transform {
+                translation 0.053 0.0 0.023
+                rotation 0.707106 0.707107 -3.3905e-09 3.14159
+                children [
+                  Shape {
+                    appearance PBRAppearance{
+                      baseColorMap ImageTexture {
+                      url [ %{='"textures/number_' .. number .. '.png"'}% ]
+                      }
+                      %{ if color == "red" then }%
+                        baseColor  1.0, 0.0, 0.0
+                      %{ elseif color == "blue" then }%
+                        baseColor  0.0, 0.0, 1.0
+                      %{else}%
+                        baseColor  0.0, 0.0, 0.0
+                      %{ end }%
+                      roughness 0.8
+                      metalness 0
+                      transparency IS transparency
+                    }
+                    geometry Box {
+                      size 0.11 0.003 0.045
+                    }
+                  }
+                ]
+              }
+              #Bit under number plate
+              Transform {
+                translation 0.053 0.0 -0.014
+                rotation 0.707106 0.707107 -3.3905e-09 3.14159
+                children [
+                  Shape {
+                    appearance PBRAppearance{
+                      %{ if color == "red" then }%
+                        baseColor  1.0, 0.0, 0.0
+                      %{ elseif color == "blue" then }%
+                        baseColor  0.0, 0.0, 1.0
+                      %{else}%
+                        baseColor  0.0, 0.0, 0.0
+                      %{ end }%
+                      roughness 0.8
+                      metalness 0
+                      transparency IS transparency
+                    }
+                    geometry Box {
+                      size 0.04 0.003 0.03
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+          #Left Leg
+          HingeJointWithBacklash{
+            backlash IS backlash
+            gearMass IS gearMass
+            jointParameters HingeJointParameters {
+              axis 0.0 0.0 1.0
+              anchor 0.0 0.037 0.0
+              dampingConstant IS MX28-damping
+              staticFriction IS MX28-friction
+            }
+            device [
+              RotationalMotor {
+                name "hip-yaw-lm[hip]"
+                maxVelocity IS MX28-vel
+                minPosition -2.6179939
+                maxPosition 2.6179939
+                maxTorque IS MX28-torque
+              }
+              PositionSensor {
+                name "hip-yaw-l"
+                resolution IS DYNAMIXEL-RESOLUTION
+              }
+            ]
+            endPoint Solid {
+              name "hip-roll-l-Solid"
+              translation 0.01 0.037 -0.042
+              contactMaterial IS contactMaterial
+              physics Physics {
+                density -1
+                mass 0.01181
+                centerOfMass -0.00157 0.0 -0.00774
+                inertiaMatrix [
+                  1.51e-06 4.3e-06 4.12e-06 0.0 1e-08 0.0
+                ]
+              }
+              boundingObject Transform {
+                translation 0.003 0.0 -0.017
+                children [
+                  Box {
+                    size 0.05300 0.0280 0.03500
+                  }
+                ]
+              }
+              children [
+                #Hip bracket
+                Transform{
+                  rotation 1.0 1.0 0.0 3.14
+                  scale 0.001 0.001 0.001
+                  children[
+                    Shape {
+                      appearance PBRAppearance {
+                        baseColor 0.513725 0.513725 0.513725
+                        roughness 0.2
+                        metalness 1
+                      }
+                      geometry DEF hipbracketb Mesh {
+                        url "boldbot_description/meshes/hipbracketb.stl"
+                      }
+                    }
+                  ]
+                }
+                HingeJointWithBacklash{
+                  backlash IS backlash
+                  gearMass IS gearMass
+                  jointParameters HingeJointParameters {
+                    axis -1.0 0.0 0.0
+                    anchor -0.02 0.0 -0.0315
+                    dampingConstant IS MX28-damping
+                    staticFriction IS MX28-friction
+                  }
+                  device [
+                    RotationalMotor {
+                      name "hip-roll-lm"
+                      maxVelocity IS MX28-vel
+                      minPosition -2.6179939
+                      maxPosition 2.6179939
+                      maxTorque IS MX28-torque
+                    }
+                    PositionSensor {
+                      name "hip-roll-l"
+                      resolution IS DYNAMIXEL-RESOLUTION
+                    }
+                  ]
+                  endPoint Solid {
+                    name "PelvLSolid"
+                    translation 0.0 0.0 -0.033
+                    contactMaterial IS contactMaterial
+                    physics Physics {
+                      density -1
+                      mass 0.17886
+                      centerOfMass 0.00388 0.00028 -0.01214
+                      inertiaMatrix [
+                        4.661e-05 0.00012523 0.00010857 -1.01e-06 -1.31e-06 -6e-08
+                      ]
+                    }
+                    boundingObject Transform {
+                      translation -0.018 0.0 -0.012000
+                      children [
+                        Box {
+                          size 0.093750 0.042400 0.050500
+                        }
+                      ]
+                    }
+                    children [
+                      #Motor Yaw connected to leg
+                      Transform {
+                        translation 0.002 0.024 0.0015
+                        rotation -0.577197 0.577657 0.577197 2.09394
+                        scale 0.001 0.001 0.001
+                        children [
+                          MX28 {
+                          }
+                        ]
+                      }
+                      #Motor roll back
+                      Transform {
+                        translation -0.02 0 0.0015
+                        rotation 0.0 1.0 0.0 1.57
+                        scale 0.001 0.001 0.001
+                        children [
+                          MX28 {
+                          }
+                        ]
+                      }
+                      HingeJointWithBacklash{
+                        backlash IS backlash
+                        gearMass IS gearMass
+                        jointParameters HingeJointParameters {
+                          axis 0.0 -1.0 0.0
+                          anchor 0.002 0.024 0.0015
+                          minStop -0.45
+                          maxStop 2.6179939
+                          dampingConstant IS MX28-damping
+                          staticFriction IS MX28-friction
+                        }
+                        device [
+                          RotationalMotor {
+                            name "hip-pitch-lm"
+                            maxVelocity IS MX28-vel
+                            minPosition -0.45
+                            maxPosition 2.6179939
+                            maxTorque IS MX28-torque
+                          }
+                          PositionSensor {
+                            name "hip-pitch-l"
+                            resolution IS DYNAMIXEL-RESOLUTION
+                          }
+                        ]
+                        endPoint Solid {
+                          name "Thigh"
+                          translation 0.002 0.0005 0.0012
+                          contactMaterial IS contactMaterial
+                          physics Physics {
+                            density -1
+                            mass 0.11543
+                            centerOfMass 0.00059 -0.01901 -0.08408
+                            inertiaMatrix [
+                              0.00010499 9.613e-05 2.493e-05 -1e-08 -7.1e-07 3.53e-06
+                            ]
+                          }
+                          boundingObject Group {
+                            children[
+                              Transform{
+                                translation 0.0 0.0 -0.07
+                                children [
+                                  Box {
+                                    size 0.042 0.053 0.045
+                                  }
+                                ]
+                              }
+                              Transform{
+                                translation 0.0 0.0235 -0.022
+                                children [
+                                  DEF thighTop Box{
+                                    size 0.0355 0.005 0.05
+                                  }
+                                ]
+                              }
+                              Transform{
+                                translation 0.0 -0.0235 -0.022
+                                children [
+                                  USE thighTop
+                                ]
+                              }
+                            ]
+                          }
+                          children [
+                            #Thigh Mesh
+                            Transform {
+                              translation 0 0 -0.125
+                              rotation 0.0 0.0 1.0 1.57
+                              scale 0.001 0.001 0.001
+                              children [
+                                Thigh {
+                                }
+                              ]
+                            } 
+                            #Knee Motor MX64
+                            Transform {
+                              translation 0.0005 0.024 -0.125
+                              scale 0.001 0.001 0.001
+                              rotation 0.577351 0.577351 0.577351 -2.0944
+                              children [
+                                MX64 {
+                                }
+                              ]
+                            }
+                            HingeJointWithBacklash{
+                              backlash IS backlash
+                              gearMass IS gearMass
+                              jointParameters HingeJointParameters {
+                                axis 0.0 -1.0 0.0
+                                anchor 0.0005 0.024 -0.125
+                                dampingConstant IS MX64-damping
+                                staticFriction IS MX64-friction
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "knee-lm"
+                                  maxVelocity IS MX46-vel
+                                  minPosition -2.6179939
+                                  maxPosition 2.6179939
+                                  maxTorque IS MX64-torque
+                                }
+                                PositionSensor {
+                                  name "knee-l"
+                                  resolution IS DYNAMIXEL-RESOLUTION
+                                }
+                              ]
+                              endPoint Solid {
+                                name "ShinSolid"
+                                translation 0.0 0.0 -0.11015
+                                contactMaterial IS contactMaterial
+                                physics Physics {
+                                  density -1
+                                  mass 0.04015
+                                  centerOfMass 0.0 -0.02151 -0.055
+                                  inertiaMatrix [
+                                    3.715e-05 2.751e-05 1.511e-05 0.0 0.0 0.0
+                                  ]
+                                }
+                                boundingObject Transform {
+                                  translation 0.006000 -0.00200 -0.079000
+                                  children [
+                                    Box {
+                                      size 0.045000 0.062000 0.160000
+                                    }
+                                  ]
+                                }
+                                children [
+                                  #Shin Mesh
+                                  Transform {
+                                    translation 0.0 -0.0015 -0.095
+                                    rotation 0.0 0.0 -1.0 1.57
+                                    scale 0.001 0.001 0.001
+                                    children [
+                                      Shin {
+                                      }
+                                    ]
+                                  }
+                                  HingeJointWithBacklash{
+                                    backlash IS backlash
+                                    gearMass IS gearMass
+                                    jointParameters HingeJointParameters {
+                                      axis 0.0 1.0 0.0
+                                      anchor 0.0 0.022 -0.152
+                                      dampingConstant IS MX28-damping
+                                      staticFriction IS MX28-friction
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "ankle-pitch-lm"
+                                        maxVelocity IS MX28-vel
+                                        minPosition -2.6179939
+                                        maxPosition 2.6179939
+                                        maxTorque IS MX28-torque
+                                      }
+                                      PositionSensor {
+                                        name "ankle-pitch-l"
+                                        resolution IS DYNAMIXEL-RESOLUTION
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      name "AnkleLSolid"
+                                      translation 0.0 0.0 -0.152
+                                      contactMaterial IS contactMaterial
+                                      physics Physics {
+                                        density -1
+                                        mass 0.17886
+                                        centerOfMass -0.02022 -0.01872 0.01214
+                                        inertiaMatrix [
+                                          4.661e-05 0.00012523 0.00010857 -1.01e-06 1.31e-06 6e-08
+                                        ]
+                                      }
+                                      boundingObject Transform {
+                                        translation -0.024600 0.0 0.014000
+                                        children [
+                                          Box {
+                                            size 0.087000 0.042400 0.048000
+                                          }
+                                        ]
+                                      }
+                                      children [ # Left Ankle Pitch Shape
+                                        #Ankle Front
+                                        Transform {
+                                          translation 0.0 0.022 0.0
+                                          rotation 0.577351 0.57735 0.57735 -2.0944
+                                          scale 0.001 0.001 0.001
+                                          children [
+                                            MX28{
+                                            }
+                                          ]
+                                        }
+                                        #Ankle Back
+                                        Transform {
+                                          translation -0.0225 0.0 0.0
+                                          rotation 0.707107 -3.3905e-09 0.707106 3.14159
+                                          scale 0.001 0.001 0.001
+                                          children [
+                                            MX28 {
+                                            }
+                                          ]
+                                        }
+                                        HingeJointWithBacklash{
+                                          backlash IS backlash
+                                          gearMass IS gearMass
+                                          jointParameters HingeJointParameters {
+                                            axis 1.0 0.0 0.0
+                                            anchor -0.0225 0.0 0.0
+                                            dampingConstant IS MX28-damping
+                                            staticFriction IS MX28-friction
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "ankle-roll-lm"
+                                              maxVelocity IS MX28-vel
+                                              minPosition -2.6179939
+                                              maxPosition 2.6179939
+                                              maxTorque IS MX28-torque
+                                            }
+                                            PositionSensor {
+                                              name "ankle-roll-l"
+                                              resolution IS DYNAMIXEL-RESOLUTION
+                                            }
+                                          ]
+                                          endPoint Solid {
+                                            name "FootLSolid[foot]"
+                                            translation 0.0 0.0 0.0
+                                            contactMaterial IS footContactMaterial
+                                            physics Physics {
+                                              density -1
+                                              mass 0.06934
+                                              centerOfMass 0.02373 0.01037 -0.0276
+                                              inertiaMatrix [
+                                                4.034e-05 7.874e-05 0.00011579 -1.9e-07 1.2e-07 1.01e-06
+                                              ]
+                                            }
+                                            boundingObject DEF boundingCleat Group{
+                                              children[
+                                                Transform{
+                                                  translation 0.0133 0.008 -0.03
+                                                  children [
+                                                    Box {
+                                                      size 0.141000 0.094000 0.012
+                                                    }
+                                                  ]
+                                                }
+                                                Transform{
+                                                    translation 0.0757 0.0476 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                }
+                                                Transform{
+                                                  translation -0.0495 0.0476 -0.041
+                                                  rotation 1.0 0.0 0.0 1.57
+                                                  children[
+                                                    Cleat{}
+                                                  ]
+                                                }
+                                                Transform{
+                                                  translation -0.0495 -0.0302 -0.041
+                                                  rotation 1.0 0.0 0.0 1.57
+                                                  children[
+                                                    Cleat{}
+                                                  ]
+                                                }
+                                                Transform{
+                                                  translation 0.0757 -0.0302 -0.041
+                                                  rotation 1.0 0.0 0.0 1.57
+                                                  children[
+                                                    Cleat{}
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                            children [
+                                              Group {
+                                                children IS leftFootSlot
+                                              }
+                                              Transform {
+                                                translation 0.0 0.0 -0.0305
+                                                scale 0.001 0.001 0.001
+                                                rotation 0.0 0.0 1.0 -1.57
+                                                children [
+                                                  FootL {
+                                                  }
+                                                ]
+                                              }
+                                              Transform {
+                                                translation -0.0045 0 -0.029
+                                                rotation 0 1 0 3.1415
+                                                children [
+                                                  RobotisOp3StraightFrameShape {
+                                                  }
+                                                ]
+                                              }
+                                              Group{
+                                                children[
+                                                  Transform{
+                                                    translation 0.0757 0.0476 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                  }
+                                                  Transform{
+                                                    translation -0.0495 0.0476 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                  }
+                                                  Transform{
+                                                    translation -0.0495 -0.0302 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                  }
+                                                  Transform{
+                                                    translation 0.0757 -0.0302 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }          
+              ]
+            }
+          }
+          #Right Leg
+          HingeJointWithBacklash{
+            backlash IS backlash
+            gearMass IS gearMass
+            jointParameters HingeJointParameters {
+              axis 0.0 0.0 1.0
+              anchor 0.0 -0.037 0.0
+              dampingConstant IS MX28-damping
+              staticFriction IS MX28-friction
+            }
+            device [
+              RotationalMotor {
+                name "hip-yaw-rm[hip]"
+                maxVelocity IS MX28-vel
+                minPosition -2.6179939
+                maxPosition 2.6179939
+                maxTorque IS MX28-torque
+              }
+              PositionSensor {
+                name "hip-yaw-r"
+                resolution IS DYNAMIXEL-RESOLUTION
+              }
+            ]
+            endPoint Solid {
+              name "hip-yaw-r-solid"
+              translation 0.01 -0.037 -0.042
+              contactMaterial IS contactMaterial
+              physics Physics {
+                density -1
+                mass 0.01181
+                centerOfMass -0.00157 0.0 -0.00774
+                inertiaMatrix [
+                  1.51e-06 4.3e-06 4.12e-06 0.0 1e-08 0.0
+                ]
+              }
+              boundingObject Transform {
+                translation 0.003 0.0 -0.017
+                children [
+                  Box {
+                    size 0.05300 0.0280 0.03500
+                  }
+                ]
+              }
+              children [
+                #Hip bracket
+                Transform{
+                  rotation 1.0 1.0 0.0 3.14
+                  scale 0.001 0.001 0.001
+                  children[
+                    Shape {
+                      appearance PBRAppearance {
+                        baseColor 0.513725 0.513725 0.513725
+                        roughness 0.2
+                        metalness 1
+                      }
+                      geometry DEF hipbracketb Mesh {
+                        url "boldbot_description/meshes/hipbracketb.stl"
+                      }
+                    }
+                  ]
+                }
+                HingeJointWithBacklash{
+                  backlash IS backlash
+                  gearMass IS gearMass
+                  jointParameters HingeJointParameters {
+                    axis -1.0 0.0 0.0
+                    anchor -0.02 0.0 -0.0315
+                    dampingConstant IS MX28-damping
+                    staticFriction IS MX28-friction
+                  }
+                  device [
+                    RotationalMotor {
+                      name "hip-roll-rm"
+                      maxVelocity IS MX28-vel
+                      minPosition -2.6179939
+                      maxPosition 2.6179939
+                      maxTorque IS MX28-torque
+                    }
+                    PositionSensor {
+                      name "hip-roll-r"
+                      resolution IS DYNAMIXEL-RESOLUTION
+                    }
+                  ]
+                  endPoint Solid {
+                    name "PelvRSolid"
+                    translation 0.0 0.0 -0.033
+                    contactMaterial IS contactMaterial
+                    physics Physics {
+                      density -1
+                      mass 0.17886
+                      centerOfMass 0.00388 0.00028 -0.01214
+                      inertiaMatrix [
+                        4.661e-05 0.00012523 0.00010857 -1.01e-06 -1.31e-06 -6e-08
+                      ]
+                    }
+                    boundingObject Transform {
+                      translation -0.018 0.0 -0.012000
+                      children [
+                        Box {
+                          size 0.093750 0.042400 0.050500
+                        }
+                      ]
+                    }
+                    children [
+                      #Motor Yaw connected to leg
+                      Transform {
+                        translation 0.002 0.024 0.0015
+                        rotation -0.577197 0.577657 0.577197 2.09394
+                        scale 0.001 0.001 0.001
+                        children [
+                          MX28 {
+                          }
+                        ]
+                      }
+                      #Motor roll back
+                      Transform {
+                        translation -0.02 0 0.0015
+                        rotation 0.0 1.0 0.0 1.57
+                        scale 0.001 0.001 0.001
+                        children [
+                          MX28 {
+                          }
+                        ]
+                      }
+                      HingeJointWithBacklash{
+                        backlash IS backlash
+                        gearMass IS gearMass
+                        jointParameters HingeJointParameters {
+                          axis 0.0 1.0 0.0
+                          anchor 0.002 0.024 0.0015
+                          minStop -2.6179939
+                          maxStop 0.45 
+                          dampingConstant IS MX28-damping
+                          staticFriction IS MX28-friction
+                        }
+                        device [
+                          RotationalMotor {
+                            name "hip-pitch-rm"
+                            maxVelocity IS MX28-vel
+                            minPosition -2.6179939
+                            maxPosition 0.45 
+                            maxTorque IS MX28-torque
+                          }
+                          PositionSensor {
+                            name "hip-pitch-r"
+                            resolution IS DYNAMIXEL-RESOLUTION
+                          }
+                        ]
+                        endPoint Solid {
+                          name "Thigh"
+                          translation 0.002 0.0005 0.0012
+                          contactMaterial IS contactMaterial
+                          physics Physics {
+                            density -1
+                            mass 0.11543
+                            centerOfMass 0.00059 -0.01901 -0.08408
+                            inertiaMatrix [
+                              0.00010499 9.613e-05 2.493e-05 -1e-08 -7.1e-07 3.53e-06
+                            ]
+                          }
+                          boundingObject Group {
+                            children[
+                              Transform{
+                                translation 0.0 0.0 -0.07
+                                children [
+                                  Box {
+                                    size 0.042 0.053 0.045
+                                  }
+                                ]
+                              }
+                              Transform{
+                                translation 0.0 0.0235 -0.022
+                                children [
+                                  USE thighTop
+                                ]
+                              }
+                              Transform{
+                                translation 0.0 -0.0235 -0.022
+                                children [
+                                  USE thighTop
+                                ]
+                              }
+                            ]
+                          }
+                          children [
+                            #Thigh Mesh
+                            Transform {
+                              translation 0 0 -0.125
+                              rotation 0.0 0.0 1.0 1.57
+                              scale 0.001 0.001 0.001
+                              children [
+                                Thigh {
+                                }
+                              ]
+                            } 
+                            #Knee Motor MX64
+                            Transform {
+                              translation 0.0005 0.024 -0.125
+                              scale 0.001 0.001 0.001
+                              rotation 0.577351 0.577351 0.577351 -2.0944
+                              children [
+                                MX64 {
+                                }
+                              ]
+                            }
+                            HingeJointWithBacklash{
+                              backlash IS backlash
+                              gearMass IS gearMass
+                              jointParameters HingeJointParameters {
+                                axis 0.0 1.0 0.0
+                                anchor 0.0005 0.024 -0.125
+                                dampingConstant IS MX64-damping
+                                staticFriction IS MX64-friction
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "knee-rm"
+                                  maxVelocity IS MX64-vel
+                                  minPosition -2.6179939
+                                  maxPosition 2.6179939
+                                  maxTorque IS MX64-torque
+                                }
+                                PositionSensor {
+                                  name "knee-r"
+                                  resolution IS DYNAMIXEL-RESOLUTION
+                                }
+                              ]
+                              endPoint Solid {
+                                name "ShinSolidR"
+                                translation 0.0 0.0 -0.11015
+                                contactMaterial IS contactMaterial
+                                physics Physics {
+                                  density -1
+                                  mass 0.04015
+                                  centerOfMass 0.0 -0.02151 -0.055
+                                  inertiaMatrix [
+                                    3.715e-05 2.751e-05 1.511e-05 0.0 0.0 0.0
+                                  ]
+                                }
+                                boundingObject Transform {
+                                  translation 0.006000 -0.00200 -0.079000
+                                  children [
+                                    Box {
+                                      size 0.045000 0.062000 0.160000
+                                    }
+                                  ]
+                                }
+                                children [
+                                  #Shin Mesh
+                                  Transform {
+                                    translation 0.0 -0.0015 -0.095
+                                    rotation 0.0 0.0 -1.0 1.57
+                                    scale 0.001 0.001 0.001
+                                    children [
+                                      Shin {
+                                      }
+                                    ]
+                                  }
+                                  HingeJointWithBacklash{
+                                    backlash IS backlash
+                                    gearMass IS gearMass
+                                    jointParameters HingeJointParameters {
+                                      axis 0.0 -1.0 0.0
+                                      anchor 0.0 0.022 -0.152
+                                      dampingConstant IS MX28-damping
+                                      staticFriction IS MX28-friction
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "ankle-pitch-rm"
+                                        maxVelocity IS MX28-vel
+                                        minPosition -2.6179939
+                                        maxPosition 2.6179939
+                                        maxTorque IS MX28-torque
+                                      }
+                                      PositionSensor {
+                                        name "ankle-pitch-r"
+                                        resolution IS DYNAMIXEL-RESOLUTION
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      name "AnkleRSolid"
+                                      translation 0.0 0.0 -0.152
+                                      contactMaterial IS contactMaterial
+                                      physics Physics {
+                                        density -1
+                                        mass 0.17886
+                                        centerOfMass -0.02022 -0.01872 0.01214
+                                        inertiaMatrix [
+                                          4.661e-05 0.00012523 0.00010857 -1.01e-06 1.31e-06 6e-08
+                                        ]
+                                      }
+                                      boundingObject Transform {
+                                        translation -0.024600 0.0 0.014000
+                                        children [
+                                          Box {
+                                            size 0.087000 0.042400 0.048000
+                                          }
+                                        ]
+                                      }
+                                      children [ # Left Ankle Pitch Shape
+                                        #Ankle Front
+                                        Transform {
+                                          translation 0.0 0.022 0.0
+                                          rotation 0.577351 0.57735 0.57735 -2.0944
+                                          scale 0.001 0.001 0.001
+                                          children [
+                                            MX28{
+                                            }
+                                          ]
+                                        }
+                                        #Ankle Back
+                                        Transform {
+                                          translation -0.0225 0.0 0.0
+                                          rotation 0.707107 -3.3905e-09 0.707106 3.14159
+                                          scale 0.001 0.001 0.001
+                                          children [
+                                            MX28 {
+                                            }
+                                          ]
+                                        }
+                                        HingeJointWithBacklash{
+                                          backlash IS backlash
+                                          gearMass IS gearMass
+                                          jointParameters HingeJointParameters {
+                                            axis 1.0 0.0 0.0
+                                            anchor -0.0225 0.0 0.0
+                                            dampingConstant IS MX28-damping
+                                            staticFriction IS MX28-friction
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "ankle-roll-rm"
+                                              maxVelocity IS MX28-vel
+                                              minPosition -2.6179939
+                                              maxPosition 2.6179939
+                                              maxTorque IS MX28-torque
+                                            }
+                                            PositionSensor {
+                                              name "ankle-roll-r"
+                                              resolution IS DYNAMIXEL-RESOLUTION
+                                            }
+                                          ]
+                                          endPoint Solid {
+                                            name "FootRSolid[foot]"
+                                            translation 0.0 0.0 0.0
+                                            contactMaterial IS footContactMaterial
+                                            physics Physics {
+                                              density -1
+                                              mass 0.06934
+                                              centerOfMass 0.02373 0.01037 -0.0276
+                                              inertiaMatrix [
+                                                4.034e-05 7.874e-05 0.00011579 -1.9e-07 1.2e-07 1.01e-06
+                                              ]
+                                            }
+                                            boundingObject Group {
+                                              children[
+                                                Transform{
+                                                  translation 0.0133 -0.013 -0.03
+                                                  children [
+                                                    Box {
+                                                      size 0.141000 0.094000 0.012
+                                                    }
+                                                  ]
+                                                }
+                                                Transform{
+                                                  translation 0.0757 -0.0505 -0.041
+                                                  rotation 1.0 0.0 0.0 1.57
+                                                  children[
+                                                    Cleat{}
+                                                  ]
+                                                }
+                                                Transform{
+                                                  translation -0.0495 -0.0505 -0.041
+                                                  rotation 1.0 0.0 0.0 1.57
+                                                  children[
+                                                    Cleat{}
+                                                  ]
+                                                }
+                                                Transform{
+                                                  translation -0.0495 0.028 -0.041
+                                                  rotation 1.0 0.0 0.0 1.57
+                                                  children[
+                                                    Cleat{}
+                                                  ]
+                                                }
+                                                Transform{
+                                                  translation 0.0757 0.028 -0.041
+                                                  rotation 1.0 0.0 0.0 1.57
+                                                  children[
+                                                    Cleat{}
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                            children [
+                                              Group {
+                                                children IS rightFootSlot
+                                              }
+                                              Transform {
+                                                translation 0.0 -0.003 -0.0305
+                                                scale 0.001 0.001 0.001
+                                                rotation 0.0 0.0 1.0 -1.57
+                                                children [
+                                                  FootR {
+                                                  }
+                                                ]
+                                              }
+                                              Transform {
+                                                translation -0.0045 0 -0.029
+                                                rotation 0 1 0 3.1415
+                                                children [
+                                                  RobotisOp3StraightFrameShape {
+                                                  }
+                                                ]
+                                              }
+                                              Group{
+                                                children[
+                                                  Transform{
+                                                    translation 0.0757 -0.0505 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                  }
+                                                  Transform{
+                                                    translation -0.0495 -0.0505 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                  }
+                                                  Transform{
+                                                    translation -0.0495 0.028 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                  }
+                                                  Transform{
+                                                    translation 0.0757 0.028 -0.041
+                                                    rotation 1.0 0.0 0.0 1.57
+                                                    children[
+                                                      Cleat{}
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }          
+              ]
+            }
+          }
+          #Left Arm
+          HingeJointWithBacklash{
+            backlash IS backlash
+            gearMass IS gearMass
+            jointParameters HingeJointParameters {
+              axis 0.0 1.0 0.0
+              anchor 0.0235 0.0602 0.0662
+              dampingConstant IS MX28-damping
+              staticFriction IS MX28-friction
+            }
+            device [
+              RotationalMotor {
+                name "shoulder-pitch-lm[shoulder]"
+                maxVelocity IS MX28-vel
+                minPosition -2.6179939
+                maxPosition 2.6179939
+                maxTorque IS MX28-torque
+              }
+              PositionSensor {
+                name "shoulder-pitch-l"
+                resolution IS DYNAMIXEL-RESOLUTION
+              }
+            ]
+            endPoint Solid {
+              name "ShoulderLSolid[arm]"
+              translation 0.0235 0.0574 0.0662
+              contactMaterial IS contactMaterial
+              physics Physics {
+                density -1
+                mass 0.01176
+                centerOfMass 0.0 0.00823 -0.00233
+                inertiaMatrix [
+                  1.65e-06 3.87e-06 3.97e-06 0.0 0.0 3.1e-07
+                ]
+              }
+              boundingObject Transform {
+                translation 0.000000 0.015500 -0.003750
+                children [
+                  Box {
+                    size 0.042000 0.031000 0.032500
+                  }
+                ]
+              }
+              children [
+                #Left shoulder Plate Mesh
+                Transform {
+                  rotation 0.0 0.0 0.0 0.0
+                  scale 0.001 0.001 0.001
+                  children [
+                    Shoulder {
+                    }
+                  ]
+                }
+                HingeJointWithBacklash{
+                  backlash IS backlash
+                  gearMass IS gearMass
+                  jointParameters HingeJointParameters {
+                    axis -1.0 0.0 0.0
+                    anchor 0.023 0.0245 -0.016
+                    dampingConstant IS MX28-damping
+                    staticFriction IS MX28-friction
+                  }
+                  device [
+                    RotationalMotor {
+                      name "shoulder-roll-lm"
+                      maxVelocity IS MX28-vel
+                      minPosition -2.6179939
+                      maxPosition 2.6179939
+                      maxTorque IS MX28-torque
+                    }
+                    PositionSensor {
+                      name "shoulder-roll-l"
+                      resolution IS DYNAMIXEL-RESOLUTION
+                    }
+                  ]
+                  endPoint Solid {
+                    name "ArmUpperLSolid[arm]"
+                    translation 0.025 0.0245 -0.016
+                    contactMaterial IS contactMaterial
+                    physics Physics {
+                      density -1
+                      mass 0.17758
+                      centerOfMass -0.01844 0.04514 0.00028
+                      inertiaMatrix [
+                        0.00022804 3.042e-05 0.00023474 -1e-08 3e-08 5.9e-07
+                      ]
+                    }
+                    boundingObject Transform {
+                      translation -0.027 0.032 0.002
+                      children [
+                        Box {
+                          size 0.052400 0.08900 0.045100
+                        }
+                      ]
+                    }
+                    children [
+                      #Shoulder Roll  Motor Mesh
+                      Transform {
+                        translation -0.002 0 0
+                        rotation 0.577351 0.577349 0.577351 2.0944
+                        scale 0.001 0.001 0.001
+                        children [
+                          MX28 {
+                          }
+                        ]
+                      }
+                      #Elbow Motor Mesh
+                      Transform {
+                        translation -0.0135 0.05665 0.0235
+                        rotation 0.0 0.0 1.0 3.1415
+                        scale 0.001 0.001 0.001
+                        children [
+                          MX28 {
+                          }
+                        ]
+                      }
+                      HingeJointWithBacklash{
+                        backlash IS backlash
+                        gearMass IS gearMass
+                        jointParameters HingeJointParameters {
+                          axis 0.0 0.0 -1.0
+                          anchor -0.0135 0.06 0.025
+                          dampingConstant IS MX28-damping
+                          staticFriction IS MX28-friction
+                        }
+                        device [
+                          RotationalMotor {
+                            name "elbow-lm"
+                            maxVelocity IS MX28-vel
+                            minPosition -2.6179939
+                            maxPosition 2.6179939
+                            maxTorque IS MX28-torque
+                          }
+                          PositionSensor {
+                            name "elbow-l"
+                            resolution IS DYNAMIXEL-RESOLUTION
+                          }
+                        ]
+                        endPoint Solid {
+                          name "ArmLowerLbowSolid[arm]"
+                          translation -0.029 0.0845 0.002
+                          contactMaterial IS handContactMaterial
+                          physics Physics {
+                            density -1
+                            mass 0.04127
+                            centerOfMass -0.019 0.07033 0.0038
+                            inertiaMatrix [
+                              6.196e-05 1.231e-05 6.854e-05 0.0 0.0 -3.72e-06
+                            ]
+                          }
+                          boundingObject Transform {
+                              translation 0.0 0.073 0.000000
+                            children [
+                              Box {
+                                size 0.032000 0.149010 0.050000
+                              }
+                            ]
+                          }
+                          children [
+                            Transform{
+                              translation -0.01 0.130 0.0
+                              children [
+                                Solid{
+                                  name "fingerL[hand]"
+                                }
+                              ]
+                            }
+                            Group {
+                              children IS leftHandSlot
+                            }
+                            Transform {
+                              translation 0.0 0.0 0.0
+                              scale 0.001 0.001 0.001
+                              rotation -0.707107 9.38186e-07 0.707107 3.14159
+                              children [
+                                Shoulder {
+                                }
+                              ]
+                            }
+                            Transform {
+                              translation -0.01 0.03 0.0
+                              scale 0.001 0.001 0.001
+                              rotation 0.577351 0.577349 0.577351 2.0944
+                              children [
+                                Arm {
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+          #Right Arm
+          HingeJointWithBacklash{
+            backlash IS backlash
+            gearMass IS gearMass
+            jointParameters HingeJointParameters {
+              axis 0.0 -1.0 0.0
+              anchor 0.0235 -0.0602 0.0662
+              dampingConstant IS MX28-damping
+              staticFriction IS MX28-friction
+            }
+            device [
+              RotationalMotor {
+                name "shoulder-pitch-rm[shoulder]"
+                maxVelocity IS MX28-vel
+                minPosition -2.6179939
+                maxPosition 2.6179939
+                maxTorque IS MX28-torque
+              }
+              PositionSensor {
+                name "shoulder-pitch-r"
+                resolution IS DYNAMIXEL-RESOLUTION
+              }
+            ]
+            endPoint Solid {
+              name "ShoulderRSolid[arm]"
+              translation 0.0235 -0.0602 0.0662
+              rotation 1.0 0.0 0.0 3.1415
+              contactMaterial IS contactMaterial
+              physics Physics {
+                density -1
+                mass 0.01176
+                centerOfMass 0.0 0.00823 -0.00233
+                inertiaMatrix [
+                  1.65e-06 3.87e-06 3.97e-06 0.0 0.0 3.1e-07
+                ]
+              }
+              boundingObject Transform {
+                translation 0.000000 0.015500 -0.003750
+                children [
+                  Box {
+                    size 0.042000 0.031000 0.032500
+                  }
+                ]
+              }
+              children [
+                #Left shoulder Plate Mesh
+                Transform {
+                  rotation 0.0 1.0 0.0 3.1415
+                  scale 0.001 0.001 0.001
+                  children [
+                    Shoulder {
+                    }
+                  ]
+                }
+                HingeJointWithBacklash{
+                  backlash IS backlash
+                  gearMass IS gearMass
+                  jointParameters HingeJointParameters {
+                    axis -1.0 0.0 0.0
+                    anchor 0.023 0.0245 0.016
+                    dampingConstant IS MX28-damping
+                    staticFriction IS MX28-friction
+                  }
+                  device [
+                    RotationalMotor {
+                      name "shoulder-roll-rm"
+                      maxVelocity IS MX28-vel
+                      minPosition -2.6179939
+                      maxPosition 2.6179939
+                      maxTorque IS MX28-torque
+                    }
+                    PositionSensor {
+                      name "shoulder-roll-r"
+                      resolution IS DYNAMIXEL-RESOLUTION
+                    }
+                  ]
+                  endPoint Solid {
+                    name "ArmUpperRSolid[arm]"
+                    translation 0.025 0.0245 0.016
+                    contactMaterial IS contactMaterial
+                    physics Physics {
+                      density -1
+                      mass 0.17758
+                      centerOfMass -0.01844 0.04514 0.00028
+                      inertiaMatrix [
+                        0.00022804 3.042e-05 0.00023474 -1e-08 3e-08 5.9e-07
+                      ]
+                    }
+                    boundingObject Transform {
+                      translation -0.027 0.032 0.002
+                      children [
+                        Box {
+                          size 0.052400 0.08900 0.045100
+                        }
+                      ]
+                    }
+                    children [
+                      #Shoulder Roll  Motor Mesh
+                      Transform {
+                        translation -0.002 0 0
+                        rotation 0.577351 0.577349 0.577351 2.0944
+                        scale 0.001 0.001 0.001
+                        children [
+                          MX28 {
+                          }
+                        ]
+                      }
+                      #Elbow Motor Mesh
+                      Transform {
+                        translation -0.0135 0.05665 0.0235
+                        rotation 0.0 0.0 1.0 3.1415
+                        scale 0.001 0.001 0.001
+                        children [
+                          MX28 {
+                          }
+                        ]
+                      }
+                      HingeJointWithBacklash{
+                        backlash IS backlash
+                        gearMass IS gearMass
+                        jointParameters HingeJointParameters {
+                          axis 0.0 0.0 1.0
+                          anchor -0.0135 0.06 0.025
+                          dampingConstant IS MX28-damping
+                          staticFriction IS MX28-friction
+                        }
+                        device [
+                          RotationalMotor {
+                            name "elbow-rm"
+                            maxVelocity IS MX28-vel
+                            minPosition -2.6179939
+                            maxPosition 2.6179939
+                            maxTorque IS MX28-torque
+                          }
+                          PositionSensor {
+                            name "elbow-r"
+                            resolution IS DYNAMIXEL-RESOLUTION
+                          }
+                        ]
+                        endPoint Solid {
+                          name "ArmLowerRbowSolid[arm]"
+                          translation -0.029 0.0845 0.002
+                          contactMaterial IS handContactMaterial
+                          physics Physics {
+                            density -1
+                            mass 0.04127
+                            centerOfMass -0.019 0.07033 0.0038
+                            inertiaMatrix [
+                              6.196e-05 1.231e-05 6.854e-05 0.0 0.0 -3.72e-06
+                            ]
+                          }
+                          boundingObject Transform {
+                              translation 0.0 0.073 0.000000
+                            children [
+                              Box {
+                                size 0.032000 0.149010 0.050000
+                              }
+                            ]
+                          }
+                          children [
+                            Transform{
+                              translation -0.01 0.130 0.0
+                              children [
+                                Solid{
+                                  name "fingerR[hand]"
+                                }
+                              ]
+                            }
+                            Group {
+                              children IS rightHandSlot
+                            }
+                            Transform {
+                              translation 0.0 0.0 0.0
+                              scale 0.001 0.001 0.001
+                              rotation -0.707107 9.38186e-07 0.707107 3.14159
+                              children [
+                                Shoulder {
+                                }
+                              ]
+                            }
+                            Transform {
+                              translation -0.01 0.03 0.0
+                              scale 0.001 0.001 0.001
+                              rotation 0.577351 0.577349 0.577351 2.0944
+                              children [
+                                Arm {
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+          #Head
+          HingeJointWithBacklash{
+            backlash IS backlash
+            gearMass IS gearMass
+            jointParameters HingeJointParameters {
+              axis 0.0 0.0 1.0
+              anchor 0.0 0.0 0.09
+              dampingConstant IS MX28-damping
+              staticFriction IS MX28-friction
+            }
+            device [
+              RotationalMotor {
+                name "head-panm"
+                maxVelocity IS MX28-vel
+                minPosition -2.6179939
+                maxPosition 2.6179939
+                maxTorque IS MX28-torque
+              }
+              PositionSensor {
+                name "head-pan"
+                resolution IS DYNAMIXEL-RESOLUTION
+              }
+            ]
+            endPoint Solid {
+              name "NeckSolid"
+              translation 0.0 0.0 0.087
+              contactMaterial IS contactMaterial
+              physics Physics {
+                density -1
+                mass 0.077
+                centerOfMass 0.010500 0.000000 0.000000
+                inertiaMatrix [
+                  1.621883e-05 2.451558e-05 2.456120e-05
+                  0.000000e+00 0.000000e+00 0.000000e+00
+                ]
+              }
+              boundingObject Transform {
+                translation 0.003750 0.000000 0.015500
+                children [
+                  Box {
+                    size 0.032500 0.042000 0.031000
+                  }
+                ]
+              }
+              children [
+                #Neck Bracket Mesh
+                Transform{
+                  scale 0.001 0.001 0.001
+                  children[
+                    Neck{
+
+                    }
+                  ]
+                }
+                HingeJointWithBacklash{
+                  backlash IS backlash
+                  gearMass IS gearMass
+                  jointParameters HingeJointParameters {
+                    axis 0.0 -1.0 0.0
+                    anchor 0.0 0.0222 0.0285
+                    dampingConstant IS MX28-damping
+                    staticFriction IS MX28-friction
+                  }
+                  device [
+                    RotationalMotor {
+                      name "head-tiltm"
+                      maxVelocity IS MX28-vel
+                      minPosition -2.6179939
+                      maxPosition 2.6179939
+                      maxTorque IS MX28-torque
+                    }
+                    PositionSensor {
+                      name "head-tilt"
+                      resolution IS DYNAMIXEL-RESOLUTION
+                    }
+                  ]
+                  endPoint Solid {
+                    name "HeadSolid"
+                    translation 0.0 0.0 0.0285
+                    contactMaterial IS contactMaterial
+                    physics Physics {
+                      density -1
+                      mass 0.025000
+                      centerOfMass 0.000000 0.000000 0.029000
+                      inertiaMatrix [
+                        6.419271e-06 3.502604e-06 5.520833e-06
+                        0.000000e+00 0.000000e+00 0.000000e+00
+                      ]
+                    }
+                    boundingObject Transform {
+                      translation -0.005 0.0 0.057750
+                      children [
+                        Box {
+                          size 0.144500 0.127000 0.14200
+                        }
+                      ]
+                    }
+                    children [
+                      Group {
+                        children IS headSlot
+                      }
+                      #Head Motor
+                      Transform{
+                        translation 0.0 0.0222 0.0
+                        scale 0.001 0.001 0.001
+                        rotation 0.577351 0.57735 0.57735 -2.0944
+                        children[
+                          MX28{
+
+                          }
+                        ]
+                      }
+                      #WebCam and Glass
+                      Transform{
+                        translation 0.017 0.018 0.02
+                        children[
+                          WebCam{
+
+                          }
+                        ]
+                      }
+                      #HeadSupportL
+                      Transform{
+                        translation 0.0095 -0.0125 0.0195
+                        rotation 0.0 0.0 1.0 1.57
+                        scale 0.001 0.001 0.001
+                        children [
+                          NeckBracketL{
+
+                          }
+                        ]
+                      }
+                      #HeadSupportR
+                      Transform{
+                        translation 0.0095 -0.0125 0.0195
+                        rotation 0.0 0.0 1.0 1.57
+                        scale 0.001 0.001 0.001
+                        children [
+                          NeckBracketR{
+
+                          }
+                        ]
+                      }
+                      #Head Bottom
+                      Transform{
+                        translation 0.0095 -0.0125 0.0195
+                        rotation 0.0 0.0 1.0 1.57
+                        scale 0.001 0.001 0.001
+                        children [
+                          HeadBottom{
+
+                          }
+                        ]
+                      }
+                      #Head Top
+                      Transform{
+                        translation 0.0095 -0.0125 0.0193
+                        rotation 0.0 0.0 1.0 1.57
+                        scale 0.01 0.01 0.01
+                        children [
+                          HeadTop{
+
+                          }
+                        ]
+                      }
+                      Camera {
+                        translation 0.0273 0.0 0.073
+                        rotation -0.577352 0.57735 0.577349 -2.09441
+                        name "Camera"
+                        fieldOfView IS fieldOfView
+                        width IS cameraWidth
+                        height IS cameraHeight
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+    boundingObject Transform {
+      translation 0.0 0.0 0.023
+      children[
+        Box {
+          size 0.105000 0.110000 0.125000
+        }
+      ]
+    }
+    physics Physics{
+    }
+    %{end}%
+  }
+}

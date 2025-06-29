@@ -1,0 +1,17 @@
+#VRML_SIM R2021b utf8
+#tags: hidden
+PROTO Cleat [
+]
+{
+    Shape{
+        appearance PBRAppearance {
+            baseColor 0.03 0.03 0.03
+            roughness 0.8
+        }
+        geometry Capsule {
+            radius 0.003
+            height 0.01
+            top FALSE
+        }
+      }
+}

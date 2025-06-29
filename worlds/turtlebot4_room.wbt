@@ -1,0 +1,219 @@
+#VRML_SIM R2022b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/plants/protos/PottedTree.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/CementTiles.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/apartment_structure/protos/Window.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/apartment_structure/protos/Wall.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/Roughcast.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/apartment_structure/protos/Radiator.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/apartment_structure/protos/Door.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/cabinet/protos/Cabinet.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/factory/containers/protos/CardboardBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/kitchen/fridge/protos/Fridge.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/lights/protos/FloorLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/living_room_furniture/protos/Sofa.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/living_room_furniture/protos/Armchair.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/paintings/protos/LandscapePainting.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/tables/protos/Table.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/traffic/protos/DirectionPanel.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/plants/protos/BunchOfSunFlowers.proto"
+EXTERNPROTO "../protos/Turtlebot4.proto"
+
+WorldInfo {
+  info [
+    "Simple TurtleBot4 simulation that can be controlled by a ROS."
+  ]
+  title "ROS2 simulation of the TurtleBot4 robot"
+  basicTimeStep 20
+}
+Viewpoint {
+  orientation -0.2878951570967451 -0.16506369377382343 0.9433293992651676 4.177335774513749
+  position 9.87271745831073 18.94204969775604 14.28731567136725
+  follow "Turtlebot4"
+}
+TexturedBackground {
+  texture "empty_office"
+  skybox FALSE
+}
+Turtlebot4 {
+  translation 6.36 0 0
+  controller "<extern>"
+  controllerArgs [
+    ""
+  ]
+}
+Floor {
+  translation 7.5 0 0
+  name "floor(1)"
+  size 5 10
+  tileSize 2 2
+  appearance CementTiles {
+    textureTransform TextureTransform {
+      scale 0.6 0.6
+    }
+  }
+}
+Window {
+  translation 6.5 -5.1 0
+  rotation 0 0 1 -1.5707953071795862
+  name "window(1)"
+  size 0.2 1 2.4
+}
+Wall {
+  translation 7.5 5.1 0
+  rotation 0 0 1 3.14159
+  name "wall(5)"
+  size 5 0.2 2.4
+  appearance Roughcast {
+    textureTransform TextureTransform {
+      scale 7 2.4
+    }
+  }
+}
+Wall {
+  translation 5.5 -5.1 0
+  name "wall(7)"
+  size 1 0.2 2.4
+  appearance Roughcast {
+    textureTransform TextureTransform {
+      scale 7 2.4
+    }
+  }
+}
+Wall {
+  translation 8.5 -5.1 0
+  name "wall(10)"
+  size 3 0.2 2.4
+  appearance Roughcast {
+    textureTransform TextureTransform {
+      scale 7 2.4
+    }
+  }
+}
+Wall {
+  translation 10.1 0 0
+  rotation -0.00022772198819084869 0 0.9999999740713477 1.57103
+  name "wall(6)"
+  size 10.4 0.2 2.4
+  appearance Roughcast {
+    textureTransform TextureTransform {
+      scale 7 2.4
+    }
+  }
+}
+Wall {
+  translation 5 2 0
+  rotation 0 0.00022681898833087582 0.9999999742765728 -1.570565307179586
+  name "wall(2)"
+  size 6 0.2 2.4
+  appearance Roughcast {
+    textureTransform TextureTransform {
+      scale 7 2.4
+    }
+  }
+}
+Wall {
+  translation 5 -3.5 0
+  rotation 0 0.0002268199883307215 0.9999999742763461 -1.570565307179586
+  name "wall(1)"
+  size 3 0.2 2.4
+  appearance Roughcast {
+    textureTransform TextureTransform {
+      scale 7 2.4
+    }
+  }
+}
+Radiator {
+  translation 7.33 4.87 0.38
+  rotation 0.0002336949872371335 0 0.9999999726933261 -1.5710253071795863
+}
+Door {
+  translation 5 -1.5 0
+  rotation -0.581329088895979 0.5726190875640585 -0.5780690883974646 0.000396075
+  position -1.5000000005630203
+  wallAppearance Roughcast {
+    textureTransform TextureTransform {
+      scale 7 2.4
+    }
+  }
+  frameAppearance Roughcast {
+    textureTransform TextureTransform {
+      scale 1 2.4
+    }
+  }
+}
+Cabinet {
+  translation 7.5 -4.9 0
+  rotation 0.00011300299708654554 0.00011407199705898447 0.999999987108951 1.5708
+}
+Sofa {
+  translation 9 -0.518 0
+  rotation 0.00014495699695408652 0 0.9999999894937345 3.14131
+}
+Armchair {
+  translation 7.62 1.03 0
+  rotation 0.00022763298820402747 0 0.999999974091611 -1.5710253071795863
+}
+Table {
+  translation 7.7 -0.52 0
+  rotation 0 0.00022690898831680196 0.9999999742561552 -1.570565307179586
+  size 1.3 0.8 0.5
+}
+DEF RED_PAPER Solid {
+  translation 6.5 -5 0.11
+  rotation -0.57735 -0.57735 -0.57735 2.0944
+  children [
+    DEF WALL_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 1 0 0
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 0.21 0.297 0.01
+      }
+    }
+  ]
+  name "paper (red)"
+  boundingObject USE WALL_SHAPE
+}
+
+DEF BLUE_PAPER Solid {
+  translation 8.5 -5 0.11
+  rotation -0.57735 -0.57735 -0.57735 2.0944
+  children [
+    DEF WALL_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 1
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 0.21 0.297 0.01
+      }
+    }
+  ]
+  name "paper (blue)"
+  boundingObject USE WALL_SHAPE
+}
+
+DEF YELLOW_PAPER Solid {
+  translation 10.0 1.5 0.11
+  rotation 0.707104 0 0.707104 3.14159
+  children [
+    DEF WALL_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 1 1 0
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 0.21 0.297 0.01
+      }
+    }
+  ]
+  name "paper (yellow)"
+  boundingObject USE WALL_SHAPE
+}

@@ -1,0 +1,67 @@
+#VRML_SIM R2021b utf8
+PROTO Boldbot [
+  field  SFVec3f     translation          0 0 0
+  field  SFRotation  rotation             0 1 0 0
+  field  SFString    name                 "Boldbot"          # Is `Robot.name`.
+  field  SFString    controller           "void"           # Find in "webots/projects/samples/contests/robocup/controllers/player"
+  field  MFString    controllerArgs       []                 # Is `Robot.controllerArgs`.
+  field  SFString    customData           ""                 # Is `Robot.customData`.
+  field  SFBool      supervisor           FALSE              # Is `Robot.supervisor`.
+  field  SFBool      synchronization      TRUE               # Is `Robot.synchronization`.
+  field  SFBool      selfCollision        TRUE               # Is `Robot.selfCollision`.
+  # MOTOR PARAMETER: See section 2. of docs/Robot_Model_RoboCup_2021 for more information
+  field  SFFloat     MX28-torque          3.10
+  field  SFFloat     MX28-vel             7.02
+  field  SFFloat     MX28-damping         0.31
+  field  SFFloat     MX28-friction        1.03
+  field  SFFloat     MX64-torque          7.30
+  field  SFFloat     MX64-vel             8.17
+  field  SFFloat     MX64-damping         0.65
+  field  SFFloat     MX64-friction        1.73
+  #field  SFFloat     MX106-torque         10.00
+  #field  SFFloat     MX106-vel            5.76
+  #field  SFFloat     MX106-damping        1.23
+  #field  SFFloat     MX106-friction       2.55
+  field  SFFloat     backlash             0.01
+  field  SFFloat     gearMass             0.001
+  field  SFFloat     DYNAMIXEL-RESOLUTION 0.0015
+  # CAMERA PARAMETERS: See docs for more information
+  field SFFloat      fieldOfView            1.36136          # Approximates 78 degrees of freedom
+  field SFInt32      cameraWidth            800              # 800 pixels
+  field SFInt32      cameraHeight           600              # 600 pixels
+  #field SFFloat      cameraLensFocalLength  3.67             # 3.67mm focal length of C920
+  #field  MFColor     recognitionColors [0 0 1]
+]
+{
+  BoldbotMain {
+    translation            IS translation
+    rotation               IS rotation
+    name                   IS name
+    controller             IS controller
+    controllerArgs         IS controllerArgs
+    customData             IS customData
+    supervisor             IS supervisor
+    synchronization        IS synchronization
+    selfCollision          IS selfCollision
+    MX28-torque            IS MX28-torque
+    MX28-vel               IS MX28-vel
+    MX28-damping           IS MX28-damping
+    MX28-friction          IS MX28-friction
+    MX64-torque            IS MX64-torque
+    MX64-vel               IS MX64-vel
+    MX64-damping           IS MX64-damping
+    MX64-friction          IS MX64-friction
+    #MX106-torque           IS MX106-torque
+    #MX106-vel              IS MX106-vel
+    #MX106-damping          IS MX106-damping
+    #MX106-friction         IS MX106-friction
+    backlash               IS backlash
+    gearMass               IS gearMass
+    DYNAMIXEL-RESOLUTION   IS DYNAMIXEL-RESOLUTION
+    fieldOfView            IS fieldOfView
+    cameraWidth            IS cameraWidth
+    cameraHeight           IS cameraHeight
+    #cameraLensFocalLength  IS cameraLensFocalLength
+    #recognitionColors      IS recognitionColors
+  }
+}

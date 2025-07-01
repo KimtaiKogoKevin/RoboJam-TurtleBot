@@ -41,7 +41,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.09945362260614894 0.2789314528080383 0.9551472250836051 0.714551022853249
-  position -9.832740053424658 -7.203201536192278 2.551931887237534
+  position -8.554611590686564 -6.159015721468909 2.2044653389299533
 }
 TexturedBackground {
   texture "stadium_dry"
@@ -56,6 +56,6 @@ RobocupSoccerField {
   size "kid"
 }
 Turtlebot4 {
-  controller "camera_test"
+  controller "odometry_test"
   supervisor TRUE
 }

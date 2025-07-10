@@ -59,3 +59,6 @@ Turtlebot4 {
   controller "odometry_test"
   supervisor TRUE
 }
+GPS {
+  name "gps"
+}
